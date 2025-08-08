@@ -43,12 +43,13 @@ void ProcessModelWithQt3D::setup3DScene()
         layout->setSpacing(0);
     }
 
-    // 创建3D窗口容器
-    QWidget *container = QWidget::createWindowContainer(new Qt3DExtras::Qt3DWindow(), ui->model3DViewContainer);
+    // 创建3D窗口并创建容器挂载到UI
+    auto *view = new Qt3DExtras::Qt3DWindow();
+    QWidget *container = QWidget::createWindowContainer(view, ui->model3DViewContainer);
     container->setFocusPolicy(Qt::StrongFocus);
 
     ui->model3DViewContainer->layout()->addWidget(container);
-    m_3dWindow = qobject_cast<Qt3DExtras::Qt3DWindow*>(container->window());
+    m_3dWindow = view;
 
     // 创建根实体
     m_rootEntity = new Qt3DCore::QEntity();
