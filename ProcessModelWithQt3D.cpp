@@ -11,6 +11,7 @@
 #include <Qt3DRender/QCameraLens>
 #include <Qt3DCore/QTransform>
 #include <QColor>
+#include <QFileInfo>
 
 
 ProcessModelWithQt3D::ProcessModelWithQt3D(QWidget *parent)
@@ -75,9 +76,11 @@ void ProcessModelWithQt3D::setup3DScene()
     m_camController->setLinearSpeed(50.0f);
     m_camController->setLookSpeed(180.0f);
 
-    // 背景色
-    if (auto *renderer = m_3dWindow->defaultFrameGraph()) {
-        renderer->setClearColor(QColor(0x20, 0x20, 0x20));
+    // 背景色（在 Qt 6 中默认帧图类型可能不同，做安全转换）
+    if (auto *fgNode = m_3dWindow->defaultFrameGraph()) {
+        if (auto *forwardRenderer = qobject_cast<Qt3DExtras::QForwardRenderer*>(fgNode)) {
+            forwardRenderer->setClearColor(QColor(0x20, 0x20, 0x20));
+        }
     }
 
     // 设置场景
@@ -96,7 +99,11 @@ void ProcessModelWithQt3D::loadSTLModel(const QString& filePath)
     // 创建新模型实体
     m_modelEntity = new Qt3DCore::QEntity(m_rootEntity);
 
-    // 创建场景加载器
+    // 创建场景加载器（确保文件存在）
+    if (!QFileInfo::exists(filePath)) {
+        qWarning() << "STL 文件不存在:" << filePath;
+        return;
+    }
     auto *sceneLoader = new Qt3DRender::QSceneLoader(m_modelEntity);
     sceneLoader->setSource(QUrl::fromLocalFile(filePath));
 

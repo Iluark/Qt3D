@@ -1,4 +1,4 @@
-QT       += core gui widgets 3dcore 3drender 3dextras 3dinput
+QT       += core gui widgets 3dcore 3dlogic 3drender 3dextras 3dinput 3dassetimport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
