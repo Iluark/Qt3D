@@ -8,7 +8,8 @@
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DRender/QSceneLoader>
 #include <QUrl>
-
+#include <Qt3DCore/QTransform>
+#include <QImage>
 
 
 namespace Ui {
@@ -47,6 +48,9 @@ private:
     void loadSTLModel(const QString& filePath);
 
     QImage grayImage; // 存储生成的灰度图
+
+    // 模型的变换（用于旋转/缩放/平移）
+    Qt3DCore::QTransform *m_modelTransform = nullptr;
 };
 
 #endif // PROCESSMODELWITHQT3D_H
