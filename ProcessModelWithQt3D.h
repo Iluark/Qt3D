@@ -10,6 +10,9 @@
 #include <QUrl>
 #include <Qt3DCore/QTransform>
 #include <QImage>
+#include <QMouseEvent>
+#include <QVector3D>
+#include <QQuaternion>
 
 
 namespace Ui {
@@ -33,6 +36,9 @@ private slots:
 
     void on_saveGrayImage_clicked();
 
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
     Ui::ProcessModelWithQt3D *ui;
 
@@ -51,6 +57,23 @@ private:
 
     // 模型的变换（用于旋转/缩放/平移）
     Qt3DCore::QTransform *m_modelTransform = nullptr;
+    
+    // 鼠标控制相关
+    bool m_mousePressed = false;
+    QPoint m_lastMousePos;
+    QQuaternion m_baseRotation;
+    QQuaternion m_currentRotation;
+    
+    // 模型属性
+    float m_modelScale = 1.0f;
+    QVector3D m_modelCenter;
+    
+    // 辅助方法
+    void resetModelTransform();
+    void updateModelTransform();
+    void fitModelToView();
+    QVector3D calculateModelCenter();
+    float calculateModelScale();
 };
 
 #endif // PROCESSMODELWITHQT3D_H
